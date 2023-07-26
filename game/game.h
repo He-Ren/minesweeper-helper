@@ -45,7 +45,7 @@ public:
 		return k != oth.k;
 	}
 };
-const Cell_Type uninit_cell(-4), unknow_cell(-3), flag_cell(-2), mine_cell(-1);
+const Cell_Type uninit_cell(-4), unknow_cell(-3), flag_cell(-2), mine_cell(-1), empty_cell(0);
 
 class Cell
 {
@@ -105,11 +105,11 @@ public:
 		return inx(c.getx()) && iny(c.gety());
 	}
 	
-	bool getn(void) const
+	int getn(void) const
 	{
 		return n;
 	}
-	bool getm(void) const
+	int getm(void) const
 	{
 		return m;
 	}
@@ -145,7 +145,7 @@ public:
 			for(int j=-1; j<=1; ++j) if(iny(y+j))
 			{
 				if(i == 0 && j == 0) continue;
-				res.emplace_back(x+i, y+j, a[i][j]);
+				res.emplace_back(x+i, y+j, a[x+i][y+j]);
 			}
 		return res;
 	}
@@ -208,6 +208,9 @@ public:
 class Game
 {
 public:
+	virtual int getn(void) const = 0;
+	virtual int getm(void) const = 0;
+	virtual bool in(Cell c) const = 0;
 	virtual Cell getcell(Cell c) const = 0;
 	virtual Board getshown(void) const = 0;
 	virtual Board getreal(void) const = 0;
