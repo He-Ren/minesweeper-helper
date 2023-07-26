@@ -100,9 +100,9 @@ public:
 	{
 		return 0 <= y && y < m;
 	}
-	bool in(int x,int y) const
+	bool in(Cell c) const
 	{
-		return inx(x) && iny(y);
+		return inx(c.getx()) && iny(c.gety());
 	}
 	
 	bool getn(void) const
@@ -114,27 +114,32 @@ public:
 		return m;
 	}
 	
-	Cell_Type get(int x,int y) const
+	Cell_Type get(Cell c) const
 	{
-		assert(in(x, y));
-		return a[x][y];
+		assert(in(c));
+		return a[c.getx()][c.gety()];
 	}
-	void set(int x,int y,Cell_Type k)
+	void set(Cell c, Cell_Type k)
 	{
-		assert(in(x, y));
-		a[x][y] = k;
-	}
-	void set(Cell c,Cell_Type k)
-	{
-		set(c.getx(), c.gety(), k);
+		assert(in(c));
+		a[c.getx()][c.gety()] = k;
 	}
 	void set(Cell c)
 	{
-		set(c.getx(), c.gety(), c.gettype());
+		set(c, c.gettype());
 	}
 	
-	std :: vector<Cell> getnei(int x,int y) const
+	std :: vector<Cell> getallcell(void) const
 	{
+		std :: vector<Cell> res;
+		for(int i=0; i<n; ++i)
+			for(int j=0; j<m; ++j)
+				res.emplace_back(i, j, a[i][j]);
+		return res;
+	}
+	std :: vector<Cell> getnei(Cell c) const
+	{
+		int x = c.getx(), y = c.gety();
 		std :: vector<Cell> res;
 		for(int i=-1; i<=1; ++i) if(inx(x+i))
 			for(int j=-1; j<=1; ++j) if(iny(y+j))
@@ -144,22 +149,14 @@ public:
 			}
 		return res;
 	}
-	std :: vector<Cell> getnei(Cell c) const
-	{
-		return getnei(c.getx(), c.gety());
-	}
 	
-	int countnei(int x,int y,Cell_Type type) const
+	int countnei(Cell c,Cell_Type type) const
 	{
 		int res = 0;
-		for(auto t: getnei(x,y))
+		for(auto t: getnei(c))
 			if(t.gettype() == type)
 				++res;
 		return res;
-	}
-	int countnei(Cell c,Cell_Type type) const
-	{
-		return countnei(c.getx(), c.gety(), type);
 	}
 	
 	bool isvalid(void) const
@@ -168,7 +165,7 @@ public:
 			for(int j=0; j<m; ++j)
 			{
 				if(!a[i][j].isnumber()) continue;
-				if(countnei(i,j,flag_cell) > a[i][j].get())
+				if(countnei(Cell(i,j), flag_cell) > a[i][j].get())
 					return 0;
 			}
 		return 1;
@@ -191,7 +188,7 @@ public:
 		for(int i=0; i<n; ++i)
 			for(int j=0; j<m; ++j)
 			{
-				auto x = get(i,j), y = oth.get(i,j);
+				auto x = a[i][j], y = oth.get(Cell(i,j));
 				if(x.isunknow() || y.isunknow()) continue;
 				if(x != y) return 0;
 			}
@@ -204,19 +201,18 @@ public:
 		for(int i=0; i<n; ++i)
 			for(int j=0; j<m; ++j)
 				if(a[i][j].isunknow())
-					a[i][j] = oth.get(i,j);
+					a[i][j] = oth.get(Cell(i,j));
 	}
 };
 
 class Game
 {
 public:
-	virtual Cell getcell(int x,int y) const = 0;
 	virtual Cell getcell(Cell c) const = 0;
 	virtual Board getshown(void) const = 0;
 	virtual Board getreal(void) const = 0;
 	virtual int getstatus(void) const = 0;
-	virtual int click(int x,int y) = 0;
+	virtual int click(Cell c) = 0;
 };
 
 #endif

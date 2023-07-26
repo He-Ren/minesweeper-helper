@@ -55,13 +55,10 @@ public:
 		assert(0 <= d && d < n * m);
 	}
 	
-	Cell getcell(int x,int y) const
-	{
-		return Cell(x, y, shown.get(x,y));
-	}
 	Cell getcell(Cell c) const
 	{
-		return getcell(c.getx(), c.gety());
+		c.settype(shown.get(c));
+		return c;
 	}
 	Board getshown(void) const
 	{
@@ -79,27 +76,27 @@ public:
 		return status;
 	}
 	
-	int click(int x,int y)
+	int click(Cell c)
 	{
-		if(!inited) init(Cell(x, y));
+		if(!inited) init(c);
 		
 		if(status != 0) return 0;
-		if(!board.in(x,y)) return 0;
-		if(shown.get(x,y) != unknow_cell) return 0;
+		if(!board.in(c)) return 0;
+		if(shown.get(c) != unknow_cell) return 0;
 		
-		if(board.get(x,y) == mine_cell)
+		if(board.get(c) == mine_cell)
 		{
 			status = -1;
-			shown.set(x,y,mine_cell);
+			shown.set(c,mine_cell);
 			return -1;
 		}
 		
-		shown.set(x, y, board.get(x,y));
-		if(board.get(x,y).isempty())
+		shown.set(c, board.get(c));
+		if(board.get(c).isempty())
 		{
-			for(auto t: board.getnei(x,y))
+			for(auto t: board.getnei(c))
 				if(t.gettype().ismine() == 0)
-					click(t.getx(), t.gety());
+					click(t);
 		}
 		
 		++showncnt;
