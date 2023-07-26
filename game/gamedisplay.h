@@ -21,6 +21,10 @@ public:
 		pos = c;
 		return click();
 	}
+	bool putflag(void)
+	{
+		return game.putflag(pos);
+	}
 	bool move(int dx,int dy)
 	{
 		Cell npos(pos.getx() + dx, pos.gety() + dy);

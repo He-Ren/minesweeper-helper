@@ -216,6 +216,7 @@ public:
 	virtual Board getreal(void) const = 0;
 	virtual int getstatus(void) const = 0;
 	virtual int click(Cell c) = 0;
+	virtual bool putflag(Cell c) = 0;
 };
 
 #endif
