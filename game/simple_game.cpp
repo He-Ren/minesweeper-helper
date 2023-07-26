@@ -7,7 +7,8 @@ typedef pair<int,int> pii;
 
 int main(void)
 {
-	int n = 10, m = 10, d = 5;
+	int n, m, d;
+	cin >> n >> m >> d;
 	
 	Local_Game game(n, m, d);
 	Game_Display game_display(game);
@@ -36,6 +37,10 @@ int main(void)
 			{
 				game_display.click();
 			}
+		}
+		else if(c == 'f')
+		{
+			game_display.putflag();
 		}
 		else if(c == 'm')
 		{
@@ -69,5 +74,6 @@ int main(void)
 	}
 	system("cls");
 	cout << game_display.show();
+	system("pause");
 	return 0;
 }
