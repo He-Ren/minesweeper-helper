@@ -50,26 +50,32 @@ int main(void)
 				game_display.move(x, y);
 			}
 		}
-		else if(c == 'u')
+		else if(c == 'w')
 		{
 			game_display.move(-1, 0);
 		}
-		else if(c == 'd')
+		else if(c == 's')
 		{
 			game_display.move(1, 0);
 		}
-		else if(c == 'l')
+		else if(c == 'a')
 		{
 			game_display.move(0, -1);
 		}
-		else if(c == 'r')
+		else if(c == 'd')
 		{
 			game_display.move(0, 1);
 		}
 		else if(c == 'q')
 		{
-			system("pause");
-			exit(0);
+			cout << "Sure? (no/yes)" << endl;
+			
+			getline(cin, op);
+			if(op == "yes")
+			{
+				system("pause");
+				exit(0);
+			}
 		}
 	}
 	system("cls");
