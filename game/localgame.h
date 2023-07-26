@@ -121,9 +121,17 @@ public:
 	bool putflag(Cell c)
 	{
 		if(status != 0) return 0;
-		if(shown.get(c) != unknow_cell) return 0;
-		shown.set(c, flag_cell);
-		return 1;
+		if(shown.get(c) == unknow_cell)
+		{
+			shown.set(c, flag_cell);
+			return 1;
+		}
+		if(shown.get(c) == flag_cell)
+		{
+			shown.set(c, unknow_cell);
+			return 1;
+		}
+		return 0;
 	}
 };
 
