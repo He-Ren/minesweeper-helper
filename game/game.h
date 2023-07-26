@@ -208,6 +208,9 @@ public:
 class Game
 {
 public:
+	virtual int getn(void) const = 0;
+	virtual int getm(void) const = 0;
+	virtual bool in(Cell c) const = 0;
 	virtual Cell getcell(Cell c) const = 0;
 	virtual Board getshown(void) const = 0;
 	virtual Board getreal(void) const = 0;

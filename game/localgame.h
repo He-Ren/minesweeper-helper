@@ -51,10 +51,22 @@ public:
 	Local_Game(int _n,int _m,int _d):
 		n(_n), m(_m), d(_d), board(), shown(n, m, unknow_cell), status(0), showncnt(0)
 	{
-		assert(n >= 0 && m >= 0);
+		assert(n >= 1 && m >= 1);
 		assert(0 <= d && d < n * m);
 	}
 	
+	int getn(void) const
+	{
+		return n;
+	}
+	int getm(void) const
+	{
+		return m;
+	}
+	bool in(Cell c) const
+	{
+		return board.in(c);
+	}
 	Cell getcell(Cell c) const
 	{
 		c.settype(shown.get(c));
