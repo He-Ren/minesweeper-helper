@@ -45,7 +45,7 @@ public:
 		return k != oth.k;
 	}
 };
-const Cell_Type uninit_cell(-4), unknow_cell(-3), flag_cell(-2), mine_cell(-1);
+const Cell_Type uninit_cell(-4), unknow_cell(-3), flag_cell(-2), mine_cell(-1), empty_cell(0);
 
 class Cell
 {
