@@ -7,7 +7,7 @@
 #include<chrono>
 #include"game.h"
 
-class Local_Game: Game
+class Local_Game: public Game
 {
 private:
 	int n, m, d;
@@ -45,11 +45,11 @@ private:
 	
 public:
 	Local_Game(void)
-		: n(0), m(0), d(0), board(), shown(), status(0), showncnt(0)
+		: n(0), m(0), d(0), board(), shown(), inited(0), status(0), showncnt(0)
 	{}
 	
 	Local_Game(int _n,int _m,int _d):
-		n(_n), m(_m), d(_d), board(), shown(n, m, unknow_cell), status(0), showncnt(0)
+		n(_n), m(_m), d(_d), board(n, m, uninit_cell), shown(n, m, unknow_cell), inited(0), status(0), showncnt(0)
 	{
 		assert(n >= 1 && m >= 1);
 		assert(0 <= d && d < n * m);
@@ -65,7 +65,7 @@ public:
 	}
 	bool in(Cell c) const
 	{
-		return board.in(c);
+		return shown.in(c);
 	}
 	Cell getcell(Cell c) const
 	{

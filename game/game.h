@@ -105,11 +105,11 @@ public:
 		return inx(c.getx()) && iny(c.gety());
 	}
 	
-	bool getn(void) const
+	int getn(void) const
 	{
 		return n;
 	}
-	bool getm(void) const
+	int getm(void) const
 	{
 		return m;
 	}
@@ -145,7 +145,7 @@ public:
 			for(int j=-1; j<=1; ++j) if(iny(y+j))
 			{
 				if(i == 0 && j == 0) continue;
-				res.emplace_back(x+i, y+j, a[i][j]);
+				res.emplace_back(x+i, y+j, a[x+i][y+j]);
 			}
 		return res;
 	}
