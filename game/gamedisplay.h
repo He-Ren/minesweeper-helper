@@ -14,11 +14,13 @@ public:
 	
 	int getn(void)       const { return game.getn();}
 	int getm(void)       const { return game.getm();}
+	int getd(void)       const { return game.getd();}
 	bool in(Cell c)      const { return game.in(c); }
 	Cell getcell(Cell c) const { return game.getcell(c);}
 	Board getshown(void) const { return game.getshown();}
 	Board getreal(void)  const { return game.getreal();}
 	int getstatus(void)  const { return game.getstatus();}
+	int getremain(void)  const { return game.getremain();}
 	
 	int click(Cell c)
 	{
@@ -93,7 +95,7 @@ public:
 			s[x + 1][y + 1] = '+';
 		}
 		
-		std :: string res;
+		std::string res;
 		for(const auto &t: s)
 			res += t + '\n';
 		return res;

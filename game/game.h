@@ -161,6 +161,19 @@ public:
 			}
 		return res;
 	}
+	std :: vector<Cell> getnei(Cell c, Cell_Type k) const
+	{
+		int x = c.getx(), y = c.gety();
+		std :: vector<Cell> res;
+		for(int i=-1; i<=1; ++i) if(inx(x+i))
+			for(int j=-1; j<=1; ++j) if(iny(y+j))
+			{
+				if(i == 0 && j == 0) continue;
+				if(a[x+i][y+j] == k)
+					res.emplace_back(x+i, y+j, a[x+i][y+j]);
+			}
+		return res;
+	}
 	
 	int countnei(Cell c,Cell_Type type) const
 	{
@@ -222,11 +235,14 @@ class Game
 public:
 	virtual int getn(void) const = 0;
 	virtual int getm(void) const = 0;
+	virtual int getd(void) const = 0;
 	virtual bool in(Cell c) const = 0;
 	virtual Cell getcell(Cell c) const = 0;
 	virtual Board getshown(void) const = 0;
 	virtual Board getreal(void) const = 0;
 	virtual int getstatus(void) const = 0;
+	virtual int getremain(void) const = 0;
+	
 	virtual int click(Cell c) = 0;
 	virtual bool setflag(Cell c) = 0;
 };

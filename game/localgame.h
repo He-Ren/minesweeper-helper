@@ -40,6 +40,21 @@ private:
 			board.set(p[i], Cell_Type( board.countnei(p[i], mine_cell) ));
 	}
 	
+	void dfs_click(Cell c)
+	{
+		if(shown.get(c) != unknow_cell) return;
+		
+		shown.set(c, board.get(c));
+		++showncnt;
+		
+		if(board.get(c).isempty())
+		{
+			for(auto t: board.getnei(c))
+				if(t.gettype().ismine() == 0)
+					dfs_click(t);
+		}
+	}
+	
 public:
 	Local_Game(void)
 		: n(0), m(0), d(0), board(), shown(), inited(0), status(0), showncnt(0)
@@ -59,6 +74,10 @@ public:
 	int getm(void) const
 	{
 		return m;
+	}
+	int getd(void) const
+	{
+		return d;
 	}
 	bool in(Cell c) const
 	{
@@ -87,28 +106,55 @@ public:
 	
 	int click(Cell c)
 	{
-		if(!inited) init(c);
-		
 		if(status != 0) return 0;
 		if(!board.in(c)) return 0;
+		if(!inited) init(c);
+		
+		if(shown.get(c).isnumber())
+		{
+			int cntflag = shown.countnei(c, flag_cell);
+			int cntunknow = shown.countnei(c, unknow_cell);
+			
+			if(cntunknow == 0) return 0;
+			if(cntflag != shown.get(c).get()) return 0;
+			
+			bool isok = 1;
+			auto nei = shown.getnei(c, unknow_cell);
+			for(auto t: nei)
+				if(board.get(t) == mine_cell)
+					isok = 0;
+			
+			if(!isok)
+			{
+				status = -1;
+				for(auto t: nei)
+				{
+					if(board.get(t) == mine_cell)
+						shown.set(t, mine_cell);
+				}
+				return -1;
+			}
+			
+			for(auto t: nei)
+				dfs_click(t);
+			
+			if(showncnt == n * m - d)
+				status = 1;
+			
+			return 1;
+		}
+		
 		if(shown.get(c) != unknow_cell) return 0;
 		
 		if(board.get(c) == mine_cell)
 		{
 			status = -1;
-			shown.set(c,mine_cell);
+			shown.set(c, mine_cell);
 			return -1;
 		}
 		
-		shown.set(c, board.get(c));
-		if(board.get(c).isempty())
-		{
-			for(auto t: board.getnei(c))
-				if(t.gettype().ismine() == 0)
-					click(t);
-		}
+		dfs_click(c);
 		
-		++showncnt;
 		if(showncnt == n * m - d)
 			status = 1;
 		
@@ -129,6 +175,16 @@ public:
 			return 1;
 		}
 		return 0;
+	}
+	
+	int getremain(void) const
+	{
+		int res = 0;
+		for(int i=0; i<n; ++i)
+			for(int j=0; j<m; ++j)
+				if(shown.get(Cell(i,j)) == flag_cell)
+					++res;
+		return d - res;
 	}
 };
 
