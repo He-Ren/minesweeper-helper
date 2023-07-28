@@ -4,26 +4,44 @@
 #include<string>
 #include"game.h"
 
-class Game_Display
+class Game_Display: public Game
 {
 private:
 	Game &game;
 	Cell pos;
 public:
 	Game_Display(Game &_game): game(_game), pos(0,0) {}
-	int click(void)
-	{
-		return game.click(pos);
-	}
+	
+	int getn(void)       const { return game.getn();}
+	int getm(void)       const { return game.getm();}
+	int getd(void)       const { return game.getd();}
+	bool in(Cell c)      const { return game.in(c); }
+	Cell getcell(Cell c) const { return game.getcell(c);}
+	Board getshown(void) const { return game.getshown();}
+	Board getreal(void)  const { return game.getreal();}
+	int getstatus(void)  const { return game.getstatus();}
+	int getremain(void)  const { return game.getremain();}
+	
 	int click(Cell c)
 	{
 		if(!game.in(c)) return 0;
 		pos = c;
 		return click();
 	}
-	bool putflag(void)
+	bool setflag(Cell c)
 	{
-		return game.putflag(pos);
+		if(!game.in(c)) return 0;
+		pos = c;
+		return setflag();
+	}
+	
+	int click(void)
+	{
+		return game.click(pos);
+	}
+	bool setflag(void)
+	{
+		return game.setflag(pos);
 	}
 	bool move(int dx,int dy)
 	{
@@ -62,12 +80,22 @@ public:
 				
 				s[i*2+1][j*2+1] = c;
 			}
-		s[pos.getx() * 2 + 1][pos.gety() * 2 + 0] = '>';
-		s[pos.getx() * 2 + 1][pos.gety() * 2 + 2] = '<';
-//		s[pos.getx() * 2 + 0][pos.gety() * 2 + 1] = 'v';
-//		s[pos.getx() * 2 + 2][pos.gety() * 2 + 1] = '^';
 		
-		std :: string res;
+		{
+			int x = pos.getx() * 2 + 1;
+			int y = pos.gety() * 2 + 1;
+			
+			s[x][y - 1] = '|';
+			s[x][y + 1] = '|';
+			s[x - 1][y] = '-';
+			s[x + 1][y] = '-';
+			s[x - 1][y - 1] = '+';
+			s[x - 1][y + 1] = '+';
+			s[x + 1][y - 1] = '+';
+			s[x + 1][y + 1] = '+';
+		}
+		
+		std::string res;
 		for(const auto &t: s)
 			res += t + '\n';
 		return res;
