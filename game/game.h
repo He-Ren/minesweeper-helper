@@ -4,6 +4,18 @@
 #include<cassert>
 #include<algorithm>
 #include<vector>
+#include<chrono>
+#include<random>
+
+namespace Rand
+{
+	std :: mt19937 gen(std::chrono::system_clock::now().time_since_epoch().count());
+	
+	int rand(int l,int r)
+	{
+		return std :: uniform_int_distribution<int>(l,r)(gen);
+	}
+}
 
 class Cell_Type
 {
@@ -216,7 +228,7 @@ public:
 	virtual Board getreal(void) const = 0;
 	virtual int getstatus(void) const = 0;
 	virtual int click(Cell c) = 0;
-	virtual bool putflag(Cell c) = 0;
+	virtual bool setflag(Cell c) = 0;
 };
 
 #endif

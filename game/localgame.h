@@ -18,13 +18,10 @@ private:
 	
 	void init(Cell fob)
 	{
-		std :: mt19937 gen(std::chrono::system_clock::now().time_since_epoch().count());
-		
 		inited = 1;
 		status = 0;
 		showncnt = 0;
 		board = Board(n, m, uninit_cell);
-		shown = Board(n, m, unknow_cell);
 		
 		std :: vector<Cell> p;
 		for(int i=0; i<n; ++i)
@@ -34,7 +31,7 @@ private:
 					continue;
 				p.emplace_back(i, j);
 			}
-		shuffle(p.begin(), p.end(), gen);
+		shuffle(p.begin(), p.end(), Rand :: gen);
 		p.push_back(fob);
 		
 		for(int i=0; i<d; ++i)
@@ -118,7 +115,7 @@ public:
 		return 1;
 	}
 	
-	bool putflag(Cell c)
+	bool setflag(Cell c)
 	{
 		if(status != 0) return 0;
 		if(shown.get(c) == unknow_cell)
