@@ -42,7 +42,7 @@ namespace Predictor_Algo
 	bool hasans = 0;
 	Cell ans;
 	
-	vector<Cell> solve(const Board &have)
+	pair<bool,Cell> solve(const Board &have, int remain)
 	{
 		n = have.getn();
 		m = have.getm();
@@ -50,7 +50,7 @@ namespace Predictor_Algo
 		g.clear();
 		q.clear();
 		hasans = 0;
-		ans = Cell(0,0);
+		ans = Cell();
 		
 		auto upd = [&] (vector<int> u,pii k)
 		{
@@ -104,6 +104,15 @@ namespace Predictor_Algo
 				upd(u, {rem, rem});
 			}
 		
+		vector<int> all;
+		for(auto c: have.getallcell())
+			if(c.gettype() == unknow_cell)
+				all.emplace_back(encode(c));
+		
+		if(!all.size()) return {0, Cell()};
+		if(all.size() <= 10 || (int)all.size() == remain)
+			upd(all, {remain, remain});
+		
 		while(q.size())
 		{
 			if(hasans) break;
@@ -133,8 +142,23 @@ namespace Predictor_Algo
 				}
 		}
 		
-		if(hasans) return {ans};
-		else return {};
+		if(hasans) return {1, ans};
+		
+		ans = decode(all[ Rand :: rand(0, (int)all.size() - 1) ]);
+		pii ansp = {(int)all.size() - remain, (int)all.size()};
+		for(auto t: f)
+		{
+			auto u = t.first;
+			pii curp = {(int)u.size() - t.second.second, (int)u.size()};
+			if(curp.first * ansp.second > ansp.first * curp.second)
+			{
+				ans = decode(u[ Rand :: rand(0, (int)u.size() - 1) ]);
+				ansp = curp;
+			}
+		}
+		
+		ans.settype(empty_cell);
+		return {0, ans};
 	}
 }
 
@@ -180,7 +204,7 @@ public:
 		have.upd(game.getshown());
 	}
 	
-	bool move(void)
+	int move(bool allow_random = 0)
 	{
 		if(game.getstatus() != 0) return 0;
 		
@@ -214,17 +238,22 @@ public:
 			}
 		}
 		
-		auto res = Predictor_Algo :: solve(have);
-		if(res.size())
+		auto res = Predictor_Algo :: solve(have, game.getd() - have.countflag());
+		if(res.first)
 		{
-			auto u = res[0];
+			auto u = res.second;
 			if(u.gettype() == mine_cell)
 				setflag(u);
 			else
 				click(u);
 			return 1;
 		}
-		
+		if(allow_random && game.in(res.second))
+		{
+			auto u = res.second;
+			click(u);
+			return 2;
+		}
 		return 0;
 	}
 	bool randmove(void)
