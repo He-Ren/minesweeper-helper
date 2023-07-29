@@ -11,6 +11,14 @@ namespace Rand
 {
 	std :: mt19937 gen(std::chrono::system_clock::now().time_since_epoch().count());
 	
+	void reset(int seed)
+	{
+		gen = std::mt19937(seed);
+	}
+	void reset(void)
+	{
+		gen = std::mt19937(std::chrono::system_clock::now().time_since_epoch().count());
+	}
 	int rand(int l,int r)
 	{
 		return std :: uniform_int_distribution<int>(l,r)(gen);

@@ -86,19 +86,20 @@ int main(void)
 		while(game.getstatus() == 0)
 		{
 			print_game();
-			Sleep(50);
+			Sleep(30);
 			
 			predictor.upd();
 			
-			bool flag = predictor.move();
-			if(flag == 0)
+			int flag = predictor.move(1);
+			assert(flag != 0);
+			
+			if(flag == 1)
 			{
-				lstmove = 0;
-				predictor.randmove();
+				lstmove = 1;
 			}
 			else
 			{
-				lstmove = 1;
+				lstmove = 0;
 			}
 		}
 		
